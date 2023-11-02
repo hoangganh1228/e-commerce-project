@@ -64,6 +64,9 @@ module.exports.changeStatus = async (req, res) => {
   const id = req.params.id;
 
   await Product.updateOne({_id: id}, {status: status});
+  
+  req.flash("success", "Cập nhật trạng thái thành công!")
+  
   res.redirect("back");
 }
 
@@ -87,6 +90,8 @@ module.exports.changeMulti = async (req, res) => {
           deletedAt: new Date(),
         }
       )
+      req.flash("success", `Đã xóa thành công ${ids.length} sản phẩm!`);
+      break;
     case "change-position":
       for (const item of ids) {
         let [id, position] = item.split("-");
@@ -98,10 +103,13 @@ module.exports.changeMulti = async (req, res) => {
         await Product.updateOne({ _id: id }, {
           position: position
         });
+        req.flash("success", `Đã đổi vị trí thành công ${ids.length} sản phẩm!`);
       }
+      break;
     default:
       break;
   }
+
   res.redirect("back")
 };
 
@@ -115,6 +123,8 @@ module.exports.deleteItem = async (req, res) => {
     deleted: true,
     deletedAt: new Date()
   })
+
+  req.flash("success", `Đã xóa thành công sản phẩm!`);
 
   res.redirect("back");
 }
