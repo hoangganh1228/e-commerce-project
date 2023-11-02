@@ -41,7 +41,10 @@ module.exports.index = async (req, res) => {
 
 
 
-  const products = await Product.find(find).limit(objectPagination.limitItems).skip(objectPagination.skip)
+  const products = await Product.find(find)
+    .sort({ position: "desc" })
+    .limit(objectPagination.limitItems)
+    .skip(objectPagination.skip);
     
   
   // console.log(products);
@@ -76,6 +79,26 @@ module.exports.changeMulti = async (req, res) => {
     case "inactive":
       await Product.updateMany({_id: { $in: ids }}, {status: "inactive"});
       break;
+    case "delete-all":
+      await Product.updateMany(
+        { _id: { $in: ids } },
+        {
+          deleted: true,
+          deletedAt: new Date(),
+        }
+      )
+    case "change-position":
+      for (const item of ids) {
+        let [id, position] = item.split("-");
+        position = parseInt(position);
+
+        // console.log(id);
+        // console.log(position);
+
+        await Product.updateOne({ _id: id }, {
+          position: position
+        });
+      }
     default:
       break;
   }
