@@ -152,6 +152,7 @@ module.exports.createPost = async (req, res) => {
     req.body.position = parseInt(req.body.position)
   }
 
+  req.body.thumbnail = `/uploads/${req.file.filename}`
 
   // Luu vao db
   const product = new Product(req.body);
