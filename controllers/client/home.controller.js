@@ -11,11 +11,19 @@ module.exports.index = async (req, res) => {
     }).limit(6);
     
     // Hết Lấy ra sản phẩm nổi bật
-    const newProducts = productsHelper.priceNewProducts(productsFeatured);
+    const newProductsFeatured  = productsHelper.priceNewProducts(productsFeatured);
+
+    const productsNew = await Product.find({
+        deleted: false,
+        status: "active"
+    }).sort({ position: "desc" }).limit(6);
+    
+    const newProductsNew = productsHelper.priceNewProducts(productsNew);
 
     
     res.render("client/pages/homes/index", {
         pageTitle: "Trang chủ",
-        productsFeatured: newProducts
+        productsFeatured: newProductsFeatured,
+        productsNew: newProductsNew
     })
 }
