@@ -44,26 +44,26 @@ module.exports.create = async (req, res) => {
 
 // [POST] /admin/products-category/create
 module.exports.createPost = async (req, res) => {
-  // const permissions = res.locals.role.permissions;
-  // if(permissions.includes("products-category_create")) {
-  //   console.log("Có quyền");
-  // } else {
-  //   res.send("403");
-  //   return; 
-  // }
-
-
-  if(req.body.position == "") {
-    const count = await ProductCategory.count();
-    req.body.position = count + 1;
+  const permissions = res.locals.role.permissions;
+  if(permissions.includes("products-category_create")) {
+    if(req.body.position == "") {
+      const count = await ProductCategory.count();
+      req.body.position = count + 1;
+    } else {
+      req.body.position = parseInt(req.body.position);
+    }
+  
+    const record = new ProductCategory(req.body);
+    await record.save();
+  
+    res.redirect(`${systemConfig.prefixAdmin}/products-category`);
   } else {
-    req.body.position = parseInt(req.body.position);
+    res.send("403");
+    return; 
   }
 
-  const record = new ProductCategory(req.body);
-  await record.save();
 
-  res.redirect(`${systemConfig.prefixAdmin}/products-category`);
+  
 };
 
 // [GET] /admin/products-category/edit/:id
