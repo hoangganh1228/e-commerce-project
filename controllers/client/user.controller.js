@@ -3,6 +3,8 @@
 const md5 = require("md5");
 const User = require("../../models/user.model");
 const ForgotPassword = require("../../models/forgot-password.model");
+const Cart = require("../../models/cart.model");
+
 const sendMailHelper = require("../../helpers/sendMail");
 const generateHelper = require("../../helpers/generate");   
 // [GET] /user/register
@@ -29,6 +31,8 @@ module.exports.registerPost = async (req, res) => {
     req.body.password = md5(req.body.password);
     const user = new User(req.body);
     await user.save(); 
+
+    
 
     res.cookie("tokenUser", user.tokenUser);
 
@@ -71,6 +75,12 @@ module.exports.loginPost = async (req, res) => {
         res.redirect("back");
         return;
     }
+    
+    await Cart.updateOne({
+      _id: req.cookies.cartId
+      }, {
+      user_id: user.id
+    });
 
     res.cookie("tokenUser", user.tokenUser);
 
