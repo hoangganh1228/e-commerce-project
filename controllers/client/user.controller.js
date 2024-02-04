@@ -11,6 +11,7 @@ const generateHelper = require("../../helpers/generate");
 module.exports.register = async (req, res) => {
   res.render("client/pages/user/register", {
     pageTitle: "Đăng ký tài khoản",
+    
   });
 };
 
