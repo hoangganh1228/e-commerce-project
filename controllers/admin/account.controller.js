@@ -86,6 +86,7 @@ module.exports.edit = async (req, res) => {
 module.exports.editPatch = async (req, res) => {
   const id = req.params.id;
 
+  
   const emailExist = await Account.findOne({
     _id: { $ne: id },
     email: req.body.email,
@@ -103,7 +104,7 @@ module.exports.editPatch = async (req, res) => {
 
     await Account.updateOne({ _id: id }, req.body);
 
-    
+
     req.flash("success", "Cập nhật tài khoản thành công!");
   }
 
