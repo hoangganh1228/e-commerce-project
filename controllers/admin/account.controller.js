@@ -103,6 +103,7 @@ module.exports.editPatch = async (req, res) => {
 
     await Account.updateOne({ _id: id }, req.body);
 
+    
     req.flash("success", "Cập nhật tài khoản thành công!");
   }
 
